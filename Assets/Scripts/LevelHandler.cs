@@ -38,29 +38,17 @@ public class LevelHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        while (LastPlatform <= Mathf.FloorToInt(_cameraController.MaxBound - PlatformGap))
-        {
-            LastPlatform += PlatformGap;
-            LastPlatformId += 1;
-            SpawnLayer((LastPlatformId % 3 - 1) * 2, LastPlatform, 5);
-        }
+
     }
 
     private void Reset()
     {
         Map.ClearAllTiles();
 
-        PlatformGap = 5;
-        LastPlatform = -5;
-        while (true)
-        {
-            SpawnLayer(LastPlatform / 2, LastPlatform, 5);
-            if (LastPlatform == 5) break;
-            LastPlatform += PlatformGap;
-        }
-        for (int i = 0; i < 1; i++)
-            Map.SetTile(new Vector3Int(-5, -4 + i, 0), Pixel);
-        LastPlatformId = 3;
+        var level = LevelLoader.LoadLevel("testlevel");
+        foreach (var platform in level.PlatformSpawnLocations)
+            SpawnLayer(platform.x, platform.y, platform.size);
+        PlayerController.Instance.transform.position = new Vector3(level.PlayerSpawnLocation.x + 0.5f, level.PlayerSpawnLocation.y + 1.5f);
     }
 
     public void SpawnLayer(int x, int y, int width)

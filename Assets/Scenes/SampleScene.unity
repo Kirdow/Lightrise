@@ -149,7 +149,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 134891683}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0.1}
+  m_LocalPosition: {x: 0, y: 0, z: 0.3}
   m_LocalScale: {x: 1.6666666, y: -0.6060606, z: 1}
   m_Children:
   - {fileID: 1919989901}
@@ -332,8 +332,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxMoveSpeed: 6
-  maxJumpHeight: 5
-  weightPerJump: 0.07
+  maxJumpHeight: 6
+  weightPerJump: 0.34
   groundCheck: {fileID: 2139450213}
   idleSprite: {fileID: -2311659948842064771, guid: 26c3d2fb37a4504459e197e27a2f94ca, type: 3}
   flyingSprite: {fileID: 7364682651488144517, guid: 26c3d2fb37a4504459e197e27a2f94ca, type: 3}
@@ -438,6 +438,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 45305d0c61eea944ebb7d056d29ce930, type: 2}
   - {fileID: 11400000, guid: db765114617f31149828f62dd70bd324, type: 2}
   FeatherTile: {fileID: 11400000, guid: 87fd2d617b983d1409ede8ef394681bc, type: 2}
+  Pixel: {fileID: 0}
   Map: {fileID: 0}
 --- !u!483693784 &359949617
 TilemapRenderer:
