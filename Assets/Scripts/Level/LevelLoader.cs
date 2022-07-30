@@ -45,7 +45,7 @@ public class LevelLoader
             Debug.LogError($"Failed to recognize level: ({levelName})");
             return null;
         }
-        return new LevelData(levelName, platforms.ToArray(), player);
+        return new LevelData(levelName, platforms.ToArray(), player, imageData.width, imageData.height);
     }
 
 

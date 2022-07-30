@@ -41,7 +41,13 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Reset();
+    }
+
+    public void Reset()
+    {
         _currentWeight = 0.0f;
+        Velocity = Vector2.zero;
     }
 
     private void Update()

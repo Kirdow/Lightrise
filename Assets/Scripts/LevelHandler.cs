@@ -8,17 +8,17 @@ public class LevelHandler : MonoBehaviour
     [Header("General")]
     public Tile[] PlatformTiles = new Tile[3];
     public Tile FeatherTile;
+
     [Header("Debug")]
     public Tile Pixel;
 
     [HideInInspector]
     public Tilemap Map;
 
-    public int LastPlatform { get; private set; }
-    public int PlatformGap { get; private set; }
-    public int LastPlatformId { get; private set; }
+    public int LastCameraY { get; private set; }
 
     private CameraController _cameraController;
+    private LevelData _levelData;
 
 
     void Awake()
@@ -38,17 +38,47 @@ public class LevelHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        int minY = _cameraController.Bound.SafeMinTile;
+        if (LastCameraY < minY)
+        {
+            for (int y = LastCameraY + 1; y <= minY; y++)
+            {
+                for (int x = 0; x < _levelData.Width; x++)
+                {
+                    SetTile(x, y, null);
+                }
+            }
 
+            LastCameraY = minY;
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Reset();
+        }
+    }
+
+    private void ResetWithLevel(string levelName)
+    {
+        Map.ClearAllTiles();
+
+        LevelData level = LevelLoader.LoadLevel(levelName);
+        _levelData = level;
+
+        foreach (var platform in level.PlatformSpawnLocations)
+            SpawnLayer(platform.x, platform.y, platform.size);
+
+        PlayerController.Instance.transform.position = new Vector3(level.PlayerSpawnLocation.x + 0.5f, level.PlayerSpawnLocation.y + 1.5f);
     }
 
     private void Reset()
     {
-        Map.ClearAllTiles();
+        ResetWithLevel("testlevel");
 
-        var level = LevelLoader.LoadLevel("testlevel");
-        foreach (var platform in level.PlatformSpawnLocations)
-            SpawnLayer(platform.x, platform.y, platform.size);
-        PlayerController.Instance.transform.position = new Vector3(level.PlayerSpawnLocation.x + 0.5f, level.PlayerSpawnLocation.y + 1.5f);
+        // This will be accurately set during frame/update
+        LastCameraY = -10;
+        _cameraController.Reset();
+        PlayerController.Instance.Reset();
     }
 
     public void SpawnLayer(int x, int y, int width)
@@ -59,8 +89,19 @@ public class LevelHandler : MonoBehaviour
         for (int xpos = start; xpos < end; xpos++)
         {
             var tile = xpos == start ? PlatformTiles[0] : (xpos == end - 1 ? PlatformTiles[2] : PlatformTiles[1]);
-            Map.SetTile(new Vector3Int(xpos, y, 0), tile);
+            SetTile(xpos, y, tile);
         }
+    }
+
+    private void SetTile(int x, int y, Tile tile)
+    {
+        if (y < 0) return;
+        if (x < 0 || x >= _levelData.Width || y >= _levelData.Height)
+        {
+             Debug.LogError("TILE OUT OF BOUNDS");
+        }
+
+        Map.SetTile(new Vector3Int(x, y, 0), tile);
     }
 
     public static LevelHandler Instance { get; private set; }
