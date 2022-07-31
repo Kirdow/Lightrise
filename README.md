@@ -1,4 +1,4 @@
-# Lightrise [<img src="https://img.shields.io/github/license/Kirdow/Lightrise">](https://github.com/Kirdow/Lightrise/blob/master/LICENSE)
+# Lightrise [<img src="https://img.shields.io/github/license/Kirdow/Lightrise?style=flat">](https://github.com/Kirdow/Lightrise/blob/master/LICENSE)
 Lightrise is a game about reaching the top of the clouds, to collect all light bulbs and retrieve the lost light module. But take care of your jumps, you're a robot and you're heavy. With the help of some feather wings you're able to jump, but don't jump too much or you'll lose them. Good luck.
 
 Controls are displayed in game if you press F1.
