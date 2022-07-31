@@ -23,4 +23,4 @@ Download can be found over at https://kirdow.itch.io/lightrise.
 * [Visual Studio 2022](https://visualstudio.microsoft.com/) - Code IDE
 * [sfxr](http://www.drpetter.se/project_sfxr.html) - Sounds
 * [Paint.NET](https://getpaint.net/) - Textures
-* [Fork](https://fork.dev/) - Git Interfact
+* [Fork](https://fork.dev/) - Git Interface
