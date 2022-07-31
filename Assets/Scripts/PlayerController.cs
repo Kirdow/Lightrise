@@ -112,9 +112,10 @@ public class PlayerController : MonoBehaviour
         if (jumpForce > 0)
         {
             JumpProgress.SetProgress(0.0f);
-            _jumpsUsed += jumpForce;
 
             if (jumpForce >= jumpLevels.Length) jumpForce = jumpLevels.Length - 1;
+            _jumpsUsed += jumpForce;
+
             return jumpLevels[jumpForce - 1];
         }
 
