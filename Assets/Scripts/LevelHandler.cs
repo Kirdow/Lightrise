@@ -52,6 +52,11 @@ public class LevelHandler : MonoBehaviour
             LastCameraY = minY;
         }
 
+        if (PlayerController.Instance.transform.position.y < minY - 1.0f)
+        {
+            FadedOverlay.Instance.ExecuteFadeSequence(() => Reset());
+        }
+
         if (Input.GetKeyDown(KeyCode.R))
         {
             Reset();
@@ -68,7 +73,7 @@ public class LevelHandler : MonoBehaviour
         foreach (var platform in level.PlatformSpawnLocations)
             SpawnLayer(platform.x, platform.y, platform.size);
 
-        PlayerController.Instance.transform.position = new Vector3(level.PlayerSpawnLocation.x + 0.5f, level.PlayerSpawnLocation.y + 1.5f);
+        PlayerController.Instance.transform.position = new Vector3(level.PlayerSpawnLocation.x + 0.5f, level.PlayerSpawnLocation.y + PlayerController.Instance.transform.localScale.y / 2.0f + 0.05f);
     }
 
     private void Reset()
