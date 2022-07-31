@@ -24,9 +24,14 @@ public class FadedOverlay : MonoBehaviour
         SetFadeProgress(0.0f);
     }
 
-    public void ExecuteFadeSequence(Action fadeOutCallback = null)
+    public void ExecuteFadeSequence(Action fadeOutCallback = null, Action fadeInCallback = null, bool fadeIn = true)
     {
-        StartCoroutine(FadeCoroutine(fadeOutCallback));
+        StartCoroutine(FadeCoroutine(fadeOutCallback, fadeInCallback, fadeIn));
+    }
+
+    public void ExecuteFadeInSequence(Action fadeInCallback = null)
+    {
+        StartCoroutine(FadeInCoroutine(fadeInCallback));
     }
 
     private void SetFadeProgress(float fade)
@@ -34,13 +39,13 @@ public class FadedOverlay : MonoBehaviour
         _canvasGroup.alpha = fade;
     }
 
-    private IEnumerator FadeCoroutine(Action fadeOutCallback)
+    private IEnumerator FadeCoroutine(Action fadeOutCallback, Action fadeInCallback, bool fadeIn)
     {
         float[] fadeTime = new float[] { FadeOutTime, FadeInTime };
 
-        for (int i = 0; i <= 1; i++)
+        for (int i = 0; i <= (fadeIn ? 1 : 0); i++)
         {
-            bool fadeIn = i == 1;
+            bool isFadeIn = i == 1;
 
             float time = 0.0f;
 
@@ -49,15 +54,14 @@ public class FadedOverlay : MonoBehaviour
                 time += Time.deltaTime / fadeTime[i];
 
                 float progress = Mathf.Lerp(0.0f, 1.0f, time);
-                SetFadeProgress(fadeIn ? 1.0f - progress : progress);
+                SetFadeProgress(isFadeIn ? 1.0f - progress : progress);
 
                 yield return null;
             }
 
-            SetFadeProgress(fadeIn ? 0.0f : 1.0f);
+            SetFadeProgress(isFadeIn ? 0.0f : 1.0f);
 
-            if (i == 0 && fadeOutCallback != null)
-                fadeOutCallback();
+            if (i == 0 && fadeOutCallback != null) fadeOutCallback();
 
             if (i == 0)
             {
@@ -69,6 +73,26 @@ public class FadedOverlay : MonoBehaviour
                 }
             }
         }
+
+
+        if (fadeIn && fadeInCallback != null) fadeInCallback();
+    }
+
+    private IEnumerator FadeInCoroutine(Action fadeInCallback)
+    {
+        float time = 0.0f;
+
+        while (time < 1.0f)
+        {
+            time += Time.deltaTime / FadeInTime;
+
+            float progress = Mathf.Lerp(1.0f, 0.0f, time);
+            SetFadeProgress(progress);
+
+            yield return null;
+        }
+
+        if (fadeInCallback != null) fadeInCallback();
     }
 
     public static FadedOverlay Instance { get; private set; }

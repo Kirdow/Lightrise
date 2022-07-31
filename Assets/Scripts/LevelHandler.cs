@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -20,6 +19,11 @@ public class LevelHandler : MonoBehaviour
     private CameraController _cameraController;
     private LevelData _levelData;
 
+    private bool _playActive = false;
+    private string _levelName = "level_0";
+    private string _nextLevel = null;
+    private bool _winActive = false;
+
 
     void Awake()
     {
@@ -29,14 +33,56 @@ public class LevelHandler : MonoBehaviour
         _cameraController = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<CameraController>();
     }
 
+    private string GetLevelForId(int id)
+    {
+        return _levelName.Substring(0, _levelName.IndexOf('_')) + "_" + id;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        string[] args = Environment.GetCommandLineArgs();
+        int index = Array.IndexOf(args, "--load-level");
+        if (index >= 0 && index + 1 < args.Length)
+        {
+            string levelName = args[index + 1];
+            if (LevelLoader.IsValidExternalLevel(levelName))
+            {
+                _levelName = levelName;
+                Debug.Log($"Loading external level: ({levelName})");
+            }    
+        }
+
         Reset();
     }
 
     // Update is called once per frame
     void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F1))
+        {
+            HelpText.ToggleHelpText();
+        }
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit();
+        }
+
+        if (_playActive && !_winActive)
+        {
+            ClearPassedTiles();
+            CheckLoss();
+            CheckReset();
+        }
+        else if (_winActive && (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.R)))
+        {
+            _levelName = GetLevelForId(0);
+            WinText.SetVisible(false);
+            ResetWithFade(true);
+        }
+    }
+
+    private void ClearPassedTiles()
     {
         int minY = _cameraController.Bound.SafeMinTile;
         if (LastCameraY < minY)
@@ -51,39 +97,92 @@ public class LevelHandler : MonoBehaviour
 
             LastCameraY = minY;
         }
+    }
 
-        if (PlayerController.Instance.transform.position.y < minY - 1.0f)
+    private void CheckLoss()
+    {
+        int minY = _cameraController.Bound.SafeMinTile;
+        if (PlayerController.Instance.transform.position.y < minY)
         {
-            FadedOverlay.Instance.ExecuteFadeSequence(() => Reset());
+            _playActive = false;
+            SoundManager.PlaySound(GameAssets.I.deathAudio);
+            FadedOverlay.Instance.ExecuteFadeSequence(() => Reset(false), () => _playActive = true);
         }
+    }
 
+    private void CheckReset()
+    {
         if (Input.GetKeyDown(KeyCode.R))
         {
             Reset();
         }
     }
 
-    private void ResetWithLevel(string levelName)
+    private void ResetWithLevel(string levelName, bool play = true)
     {
         Map.ClearAllTiles();
+        foreach (var item in GameObject.FindGameObjectsWithTag("Item"))
+        {
+            Destroy(item);
+        }
+
+        // This will be accurately set during frame/update
+        LastCameraY = -10;
+        _cameraController.Reset();
 
         LevelData level = LevelLoader.LoadLevel(levelName);
         _levelData = level;
+        PlayerController.Instance.Reset(level);
 
         foreach (var platform in level.PlatformSpawnLocations)
             SpawnLayer(platform.x, platform.y, platform.size);
 
         PlayerController.Instance.transform.position = new Vector3(level.PlayerSpawnLocation.x + 0.5f, level.PlayerSpawnLocation.y + PlayerController.Instance.transform.localScale.y / 2.0f + 0.05f);
+        if (level.NextLevel >= 0)
+        {
+            _nextLevel = GetLevelForId(level.NextLevel);
+            LightItem.SummonAt(level.LightSpawnLocation.x, level.LightSpawnLocation.y, () =>
+            {
+                _levelName = _nextLevel;
+                ResetWithFade();
+            });
+        }
+        else
+        {
+            _nextLevel = null;
+            ModuleItem.SummonAt(level.LightSpawnLocation.x, level.LightSpawnLocation.y, () =>
+            {
+                _playActive = false;
+                FadedOverlay.Instance.ExecuteFadeSequence(() => Win(), null, false);
+            });
+        }
+
+        if (play)
+            _playActive = true;
     }
 
-    private void Reset()
+    public void ResetWithFade(bool onlyFadeIn = false)
     {
-        ResetWithLevel("testlevel");
+        _playActive = false;
+        if (onlyFadeIn)
+        {
+            Reset(false);
+            FadedOverlay.Instance.ExecuteFadeInSequence(() => _playActive = true);
+            return;
+        }
 
-        // This will be accurately set during frame/update
-        LastCameraY = -10;
-        _cameraController.Reset();
-        PlayerController.Instance.Reset();
+        FadedOverlay.Instance.ExecuteFadeSequence(() => Reset(false), () => _playActive = true);
+    }
+
+    private void Win()
+    {
+        _winActive = true;
+        WinText.SetVisible(true);
+    }
+
+    private void Reset(bool play = true)
+    {
+        ResetWithLevel(_levelName, play);
     }
 
     public void SpawnLayer(int x, int y, int width)

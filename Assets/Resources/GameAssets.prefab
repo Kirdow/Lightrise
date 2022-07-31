@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &609181322351984036
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 9168249564877749969}
+  - component: {fileID: -8678024625123796829}
+  m_Layer: 0
+  m_Name: GameAssets
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &9168249564877749969
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609181322351984036}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 2.6210337, y: 0.034743935, z: -9.818113}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-8678024625123796829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 609181322351984036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 73d11c7703500a244b9b553df1002f8c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpAudio: {fileID: 8300000, guid: 88406beb036b9b6449008b4bcef22baf, type: 3}
+  deathAudio: {fileID: 8300000, guid: d93e4e01b65e40a44a2ad5b46fe5dc5a, type: 3}
+  winAudio: {fileID: 8300000, guid: ebdfa6ba04f2501458be6f686f3e1360, type: 3}
+  jumpGaugeAudio:
+  - {fileID: 8300000, guid: 1205d58d274b82a458f5157487dfa04c, type: 3}
+  - {fileID: 8300000, guid: 159755d1e4daefd43a8b55929b86c01e, type: 3}
+  - {fileID: 8300000, guid: 33396de14c371fd49809ac20cfee1510, type: 3}
+  - {fileID: 8300000, guid: b025e91e00038704aa866c4a3e2d9180, type: 3}
+  - {fileID: 8300000, guid: 479af6c80853f2c4baa581bbaac230de, type: 3}
+  - {fileID: 8300000, guid: 4d9e50086b9cb47458f3c9d9dba3e8cd, type: 3}
+  - {fileID: 8300000, guid: 6705648f7ab22ee43b4cbb095cdfe4e9, type: 3}
+  - {fileID: 8300000, guid: f8d4bd0c9c96c5944b6729e4fca9856f, type: 3}
+  lightItem: {fileID: 5275718033469458729, guid: de87d942f892fdc45a971e144c6df53c, type: 3}
+  moduleItem: {fileID: 4976418191089717457, guid: 9cc06d10e418e2e449dfa36481d2d993, type: 3}

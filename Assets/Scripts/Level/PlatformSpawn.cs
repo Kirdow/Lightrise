@@ -1,9 +1,6 @@
-﻿using UnityEngine;
-
-public class PlatformSpawn
+﻿public class PlatformSpawn : BaseSpawn
 {
-    public int x, y;
     public int size;
 
-    public PlatformSpawn(int x, int y, int size) => (this.x, this.y, this.size) = (x, y, size);
+    public PlatformSpawn(int x, int y, int size) : base(x, y) => (this.size) = (size);
 }

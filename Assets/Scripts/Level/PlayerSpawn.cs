@@ -1,8 +1,4 @@
-﻿using UnityEngine;
-
-public class PlayerSpawn
+﻿public class PlayerSpawn : BaseSpawn
 {
-    public int x, y;
-
-    public PlayerSpawn(int x, int y) => (this.x, this.y) = (x, y);
+    public PlayerSpawn(int x, int y) : base(x, y) { }
 }
